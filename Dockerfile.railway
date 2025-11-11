@@ -1,0 +1,16 @@
+FROM docker:24-dind
+
+WORKDIR /app
+
+# Installe docker-compose
+RUN apk add --no-cache py3-pip python3-dev libffi-dev openssl-dev gcc libc-dev make
+RUN pip3 install docker-compose
+
+# Copie tout le code
+COPY . .
+
+# Expose les ports
+EXPOSE 3000 8000
+
+# Lance docker-compose
+CMD ["docker-compose", "up", "--build"]
