@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  frontend:
+    build: ./frontend
+    ports: ["3000:3000"]
+    depends_on: [backend]
+    environment:
+      - NEXT_PUBLIC_API_URL=http://backend:8000
+
+  backend:
+    build: ./backend
+    ports: ["8000:8000"]
+    volumes:
+      - ./generated_projects:/app/generated_projects
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+    depends_on: [mongodb]
+
+  mongodb:
+    image: mongo:6
+    ports: ["27017:27017"]
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:
