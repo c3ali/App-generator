@@ -2,9 +2,8 @@ FROM docker:24-dind
 
 WORKDIR /app
 
-# Installe docker-compose
-RUN apk add --no-cache py3-pip python3-dev libffi-dev openssl-dev gcc libc-dev make
-RUN pip3 install docker-compose
+# Installe docker-compose VIA APK (plus propre, pas d'erreur PEP 668)
+RUN apk add --no-cache docker-compose
 
 # Copie tout le code
 COPY . .
