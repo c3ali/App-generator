@@ -1,0 +1,12 @@
+.env
+.env.local
+*.log
+node_modules/
+.next/
+__pycache__/
+*.pyc
+venv/
+.env
+generated_projects/
+.vscode/
+.idea/
