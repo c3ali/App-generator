@@ -14,6 +14,32 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+# AJOUTE CET IMPORT EN HAUT
+import psycopg2
+from contextlib import contextmanager
+
+@contextmanager
+def get_db():
+    conn = psycopg2.connect(os.getenv("DATABASE_URL"))
+    try:
+        yield conn
+        conn.commit()
+    except Exception:
+        conn.rollback()
+        raise
+    finally:
+        conn.close()
+
+@app.get("/health")
+async def health_check():
+    """Vérifie la connexion PostgreSQL"""
+    try:
+        with get_db() as conn:
+            cur = conn.cursor()
+            cur.execute("SELECT 1;")
+            return {"status": "healthy", "db": "connected"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"DB error: {str(e)}")
 
 generator = AppGenerator()
 
