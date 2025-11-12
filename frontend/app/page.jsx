@@ -8,21 +8,32 @@ export default function Home() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
-    
-    const formData = new FormData(e.target)
-    const response = await fetch('/api/generate', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name: formData.get('name'),
-        description: formData.get('description'),
-        stack: formData.get('stack')
+
+    try {
+      const formData = new FormData(e.target)
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+
+      const response = await fetch(`${API_URL}/api/generate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.get('name'),
+          description: formData.get('description'),
+          stack: formData.get('stack')
+        })
       })
-    })
-    
-    const project = await response.json()
-    setStatus(`✅ Projet créé : ${project.project_id}`)
-    setLoading(false)
+
+      if (!response.ok) {
+        throw new Error(`Erreur ${response.status}`)
+      }
+
+      const project = await response.json()
+      setStatus(`✅ Projet créé : ${project.project_id}`)
+    } catch (error) {
+      setStatus(`❌ Erreur: ${error.message}`)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (

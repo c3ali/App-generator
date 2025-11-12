@@ -8,13 +8,20 @@ from orchestrator.models import ProjectRequest
 
 app = FastAPI(title="OK Computer Clone", version="1.0.0")
 
-# CONFIG CORS POUR VERCEL ET LOCAL
+# CONFIG CORS POUR RAILWAY ET LOCAL
+allowed_origins = [
+    "http://localhost:3000",
+    "http://localhost:3001",
+]
+
+# Ajouter l'origine Railway du frontend depuis variable d'environnement
+frontend_url = os.getenv("FRONTEND_URL")
+if frontend_url:
+    allowed_origins.append(frontend_url)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "https://ok-computer-*.vercel.app",  # Remplace * par ton ID Vercel
-        "http://localhost:3000"
-    ],
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
