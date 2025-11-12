@@ -12,7 +12,7 @@ app = FastAPI(title="OK Computer Clone", version="1.0.0")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "https://ok-computer-*.vercel.app",  # Remplace * par ton ID Vercel
+        "https://app-generator-sigma.vercel.app",  # Remplace * par ton ID Vercel
         "http://localhost:3000"
     ],
     allow_credentials=True,
